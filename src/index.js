@@ -1,4 +1,5 @@
 const config = require('./config');
+const { connectToDatabase } = require('./sequelize');
 const cors = require('cors');
 const express = require('express');
 const app = express();
@@ -16,3 +17,5 @@ app.use(cors());
 app.listen(config.port, () => {
     console.log(`Servewr running on http://localhost:${config.port}`);
 });
+
+connectToDatabase();

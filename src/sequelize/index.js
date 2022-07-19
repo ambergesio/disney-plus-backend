@@ -16,6 +16,4 @@ const connectToDatabase = () => {
     });
 };
 
-connectToDatabase();
-
-module.exports = sequelize;
+module.exports = {sequelize, connectToDatabase };
