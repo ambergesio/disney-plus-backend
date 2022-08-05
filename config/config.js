@@ -1,13 +1,28 @@
 require('dotenv').config();
 
-module.exports = {
+const enviroment = {
     "development": {
-        "server_port": process.env.PORT,
-        "database": process.env.DATABASE_NAME,
-        "username": process.env.DATABASE_USER,
-        "password": process.env.DATABASE_PASSWORD,
-        "host": process.env.DB_HOST,
-        "port": process.env.DB_PORT,
-        "dialect": "mysql"
+        server_port: process.env.PORT,
+        database: process.env.DATABASE_NAME,
+        username: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        dialect: "mysql"
+    },
+    "production": {
+        server_port: process.env.PORT,
+        database: process.env.DATABASE_NAME,
+        username: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        dialect: "mysql"
     }
-}
+};
+
+const currentEnviroment = process.env.ENVIROMENT || 'development';
+
+const config = enviroment[currentEnviroment];
+
+module.exports = config;
