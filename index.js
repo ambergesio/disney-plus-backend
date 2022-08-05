@@ -7,7 +7,7 @@ const routes = require('./routes');
 const port = config.server_port;
 
 
-app.use('/', routes);
+app.use('/api/v1', routes);
 
 
 app.use(express.json());
