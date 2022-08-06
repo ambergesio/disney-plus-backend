@@ -7,12 +7,12 @@ const routes = require('./routes');
 const port = config.server_port;
 
 
-app.use('/api/v1', routes);
-
-
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
+
+app.use('/api/v1', routes);
 
 
 app.listen(port, () => {
