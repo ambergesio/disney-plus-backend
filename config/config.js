@@ -8,7 +8,8 @@ const enviroment = {
         password: process.env.DATABASE_PASSWORD,
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
-        dialect: "mysql"
+        dialect: "mysql",
+        secret: process.env.SECRET
     },
     "production": {
         server_port: process.env.PORT,
@@ -17,7 +18,8 @@ const enviroment = {
         password: process.env.DATABASE_PASSWORD,
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
-        dialect: "mysql"
+        dialect: "mysql",
+        secret: process.env.SECRET
     }
 };
 
