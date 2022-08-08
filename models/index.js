@@ -5,7 +5,7 @@ const config = require('../config/config');
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 
-const Character_Movie = sequelize.define('Character_Movie',
+const Character_Movie = sequelize.define('character_movie',
     {}, { timestamps: false }
 );
 
@@ -73,6 +73,65 @@ const Movie = sequelize.define('movie',
 );
 
 
+const Role = sequelize.define('role',
+    {
+        id: {
+            type: Sequelize.INTEGER,
+            autoIncrement: true,
+            primaryKey: true
+        },
+        role: {
+            type: Sequelize.STRING,
+            unique: true,
+            allowNull: false
+        }
+    },
+    { timestamps: false }
+);
+
+
+const User = sequelize.define('user',
+    {
+        email: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            unique: true
+        },
+        firstName: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        lastName: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        password: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        image: {
+            type: Sequelize.STRING,
+            defaultValue: 'images/user.jpg'
+        },
+        roleId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: {
+                model: Role,
+                key: 'id'
+            }
+        },
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE,
+        deletedAt: Sequelize.DATE
+    },
+    {
+        timestamps: true,
+        paranoid: true
+    }
+)
+
+
 
 Character.belongsToMany(Movie, { through: Character_Movie });
 Movie.belongsToMany(Character, { through: Character_Movie });
@@ -82,12 +141,16 @@ Character_Movie.belongsTo(Character);
 Character_Movie.belongsTo(Movie);
 Genre.hasMany(Movie);
 Movie.belongsTo(Genre, { foreignKey: 'genreId' });
+// Role.hasMany(User);
+User.belongsTo(Role, { foreignKey: 'roleId' });
 
 
-Character.sync();
-Movie.sync();
 Genre.sync();
+Movie.sync();
+Character.sync();
 Character_Movie.sync();
+Role.sync();
+User.sync();
 
 
-module.exports = { Character, Movie, Genre, Character_Movie };
+module.exports = { Character, Movie, Genre, Character_Movie, User, Role };
