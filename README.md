@@ -29,6 +29,11 @@ To populate Genres table:
 node models/seedGenres.js
 ```
 
+To populate Roles table:
+```
+node models/seedRoles.js
+```
+
 To populate Movies table:
 ```
 node models/seedMovies.js
