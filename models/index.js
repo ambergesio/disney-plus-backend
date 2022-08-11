@@ -6,7 +6,7 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 
 
 const Character_Movie = sequelize.define('character_movie',
-    {}, { timestamps: false }
+    {}
 );
 
 
@@ -17,12 +17,14 @@ const Genre = sequelize.define('genre',
             unique: true,
             allowNull: false
         },
-        image: Sequelize.STRING,
+        image:  Sequelize.STRING,
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
         deletedAt: Sequelize.DATE
     },
-    { timestamps: true }
+    {
+        timestamps: true
+    }
 );
 
 
@@ -39,9 +41,14 @@ const Character = sequelize.define('character',
         },
         age: Sequelize.INTEGER,
         weight: Sequelize.INTEGER,
-        history: Sequelize.STRING(1024)
+        history: Sequelize.STRING(1024),
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE,
+        deletedAt: Sequelize.DATE
     },
-    { timestamps: true }
+    {
+        timestamps: true
+    }
 );
 
 
@@ -69,7 +76,9 @@ const Movie = sequelize.define('movie',
         updatedAt: Sequelize.DATE,
         deletedAt: Sequelize.DATE
     },
-    { timestamps: true }
+    {
+        timestamps: true
+    }
 );
 
 
@@ -126,22 +135,20 @@ const User = sequelize.define('user',
         deletedAt: Sequelize.DATE
     },
     {
-        timestamps: true,
-        paranoid: true
+        timestamps: true
     }
-)
-
+);
 
 
 Character.belongsToMany(Movie, { through: Character_Movie });
 Movie.belongsToMany(Character, { through: Character_Movie });
-Character.hasMany(Character_Movie);
-Movie.hasMany(Character_Movie);
+Character.hasMany(Character_Movie, { onDelete: 'cascade' });
+Movie.hasMany(Character_Movie, { onDelete: 'cascade' });
 Character_Movie.belongsTo(Character);
 Character_Movie.belongsTo(Movie);
-Genre.hasMany(Movie);
+Genre.hasMany(Movie, { onDelete: 'cascade' });
 Movie.belongsTo(Genre, { foreignKey: 'genreId' });
-// Role.hasMany(User);
+Role.hasMany(User);
 User.belongsTo(Role, { foreignKey: 'roleId' });
 
 
