@@ -1,12 +1,17 @@
 const router = require('express').Router();
+const charactersRouter = require('./characters.router');
+const moviesRouter = require('./movies.router');
+const genresRouter = require('./genres.router');
+const authRouter = require('./auth.router');
 
 
-router.get('/', (req, res) => {
-    res.status(200).json({ error: false, message: "Server path: '/"});
-});
+router.use('/characters', charactersRouter);
+router.use('/movies', moviesRouter);
+router.use('/genres', genresRouter);
+router.use('/auth', authRouter);
 
-router.get('*', (req, res) => {
-    return res.status(404).json({ error: true, message: 'not found' });
+router.use('*', (req, res) => {
+    return res.status(404).send('Not found');
 });
 
 
