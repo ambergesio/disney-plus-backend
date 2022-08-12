@@ -1,4 +1,9 @@
-const { getAllCharactersService, getCHaracterByIdService, createNewCharacterService, deleteCharacterService } = require('../services/characters.service');
+const {
+    getAllCharactersService,
+    getCharacterByIdService,
+    createNewCharacterService,
+    updateCharacterService,
+    deleteCharacterService } = require('../services/characters.service');
 
 
 const getAllCharacters = async (req, res) => {
@@ -35,7 +40,7 @@ const getAllCharacters = async (req, res) => {
 
 const getCharacterById = async (req, res) => {
     try {
-        const character = await getCHaracterByIdService(req.params, req.query);
+        const character = await getCharacterByIdService(req.params, req.query);
         if (!character) {
             return res
             .status(404)
@@ -95,9 +100,35 @@ const createNewCharacter = async (req, res) => {
     }
 };
 
-//@todo
+
 const updateCharacter = async (req, res) => {
-    return res.status(200).json({ error: false, message: 'Character updated'});
+    try {
+        const updateChar = await updateCharacterService(req.body, req.params.id);
+        if (updateChar.error) {
+            return res
+            .status(404)
+            .json({
+                error: true,
+                message: `Character with id ${req.params.id} could not be updated becaus it may not exist.`
+            });
+        }
+        console.log(updateChar)
+        return res
+        .status(200)
+        .json({
+            error: updateChar.error,
+            message: `Character with id ${req.params.id} updated successfully`,
+            data: updateChar.data
+        });
+    }
+    catch (error) {
+        return res
+        .status(500)
+        .json({
+            error: true,
+            message: `${error}`
+        });
+    }
 };
 
 
@@ -130,4 +161,9 @@ const deleteCharacter = async (req, res) => {
 };
 
 
-module.exports = { getAllCharacters, getCharacterById, createNewCharacter, updateCharacter, deleteCharacter };
+module.exports = {
+    getAllCharacters,
+    getCharacterById,
+    createNewCharacter,
+    updateCharacter,
+    deleteCharacter };
