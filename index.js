@@ -16,7 +16,7 @@ app.use('/api/v1', routes);
 
 
 app.listen(port, () => {
-    console.log(`Servewr running on http://localhost:${port}`);
+    console.log('\x1b[42m%s\x1b[0m',`Servewr running on http://localhost:${port}`);
 });
 
 connectToDatabase();
