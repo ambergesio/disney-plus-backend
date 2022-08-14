@@ -112,7 +112,6 @@ const updateCharacter = async (req, res) => {
                 message: `Character with id ${req.params.id} could not be updated becaus it may not exist.`
             });
         }
-        console.log(updateChar)
         return res
         .status(200)
         .json({
