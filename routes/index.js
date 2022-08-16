@@ -3,12 +3,14 @@ const charactersRouter = require('./characters.router');
 const moviesRouter = require('./movies.router');
 const genresRouter = require('./genres.router');
 const authRouter = require('./auth.router');
+const charmovieRouter = require('./charmovie.router');
 
 
 router.use('/characters', charactersRouter);
 router.use('/movies', moviesRouter);
 router.use('/genres', genresRouter);
 router.use('/auth', authRouter);
+router.use('/charmovie', charmovieRouter)
 
 router.use('*', (req, res) => {
     return res.status(404).send('Not found');
