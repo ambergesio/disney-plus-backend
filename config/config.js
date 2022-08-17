@@ -9,7 +9,8 @@ const enviroment = {
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
         dialect: "mysql",
-        secret: process.env.SECRET
+        secret: process.env.SECRET,
+        fepath: process.env.FRONTPATH
     },
     "production": {
         server_port: process.env.PORT,
@@ -19,7 +20,8 @@ const enviroment = {
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
         dialect: "mysql",
-        secret: process.env.SECRET
+        secret: process.env.SECRET,
+        fepath: process.env.FRONTPATH
     }
 };
 
