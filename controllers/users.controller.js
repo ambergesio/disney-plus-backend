@@ -1,5 +1,11 @@
-const { createNewUserService, getAllUsersService, updateUserService, updateUserPasswordService, userLoginService, deleteUserService} = require('../services/users.service');
 const { signToken } = require('../middlewares/token');
+const {
+    createNewUserService,
+    getAllUsersService,
+    updateUserService,
+    updateUserPasswordService,
+    userLoginService,
+    deleteUserService} = require('../services/users.service');
 
 
 const userRegister = async (req, res) => {
@@ -201,4 +207,10 @@ const deleteUser = async (req, res) => {
 }
 
 
-module.exports = { userRegister, userLogin, getAllUsers, updateUser, updateUserPassword, deleteUser };
+module.exports = {
+    userRegister,
+    userLogin,
+    getAllUsers,
+    updateUser,
+    updateUserPassword,
+    deleteUser };

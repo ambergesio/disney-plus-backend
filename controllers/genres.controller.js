@@ -1,4 +1,9 @@
-const { getAllGenresService, getGenreByIdService, createNewGenreService, deleteGenreService, updateGenreService } = require("../services/genres.service")
+const {
+    getAllGenresService,
+    getGenreByIdService,
+    createNewGenreService,
+    deleteGenreService,
+    updateGenreService } = require("../services/genres.service")
 
 
 const getAllGenres = async (req, res) => {
@@ -149,4 +154,9 @@ const deleteGenre = async (req, res) => {
 };
 
 
-module.exports = { getAllGenres, getGenreById, createNewGenre, deleteGenre, updateGenre };
+module.exports = {
+    getAllGenres,
+    getGenreById,
+    createNewGenre,
+    deleteGenre,
+    updateGenre };

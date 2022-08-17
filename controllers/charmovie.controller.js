@@ -1,4 +1,8 @@
-const { getAllCharsMoviesService, findCharMovieService, createCharMovieService, deleteCharMovieService } = require('../services/charmovie.service');
+const {
+    getAllCharsMoviesService,
+    findCharMovieService,
+    createCharMovieService,
+    deleteCharMovieService } = require('../services/charmovie.service');
 
 
 const getAllCharsMovies = async (req, res) => {
@@ -100,4 +104,7 @@ const deleteCharMovie = async (req, res) => {
 };
 
 
-module.exports = { getAllCharsMovies, createCharMovie, deleteCharMovie };
+module.exports = {
+    getAllCharsMovies,
+    createCharMovie,
+    deleteCharMovie };
