@@ -10,7 +10,7 @@ const getAllMovies = async (req, res) => {
     try {
         const allMovies = await getAllMoviesService(req.query);
         if (!allMovies) return res.status(404).json({ error: true, message: "An error occurred when trying to get all movies."})
-        return res.status(200).json({ error: false, data: allMovies });
+        return res.status(200).json({ error: false, movies: allMovies });
     }
     catch (err) {
         return res.status(500).json({ error: true, message: `${err}`})
