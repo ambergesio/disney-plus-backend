@@ -24,7 +24,7 @@ const getAllCharacters = async (req, res) => {
         .json({ 
             error: false,
             message: 'All characters successfully obtained',
-            data: allCharacters
+            characters: allCharacters
         });
     }
     catch (error) {
