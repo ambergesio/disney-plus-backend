@@ -64,7 +64,13 @@ const Movie = sequelize.define('movie',
             allowNull: false
         },
         date: Sequelize.STRING,
-        rate: Sequelize.INTEGER,
+        rate: {
+            type: Sequelize.INTEGER,
+            validate: {
+                min: 1,
+                max: 5
+            }
+        },
         genreId: {
             type: Sequelize.INTEGER,
             references: {
