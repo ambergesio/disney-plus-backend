@@ -12,8 +12,8 @@ const connection = mysql.createConnection({
 connection.query(
   `CREATE DATABASE IF NOT EXISTS disney`,
   (err, results) => {
-    console.log(results);
-    console.log(err);
+    console.log('\x1b[46m%s\x1b[0m',results);
+    console.log('\x1b[41m%s\x1b[0m',err);
   }
 );
 
