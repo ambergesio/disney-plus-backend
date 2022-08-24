@@ -45,4 +45,36 @@ const getCharacterByIdRepo = async ( id, characterAttributes, movieAttributes, g
 };
 
 
-module.exports = { getAllCharactersRepo, getCharacterByIdRepo };
+const createNewCharacterRepo = async (character) => {
+    try {
+        return await Character.create(character, {
+            include: Movie
+        });
+    }
+    catch (error) {
+        throw error;
+    }
+};
+
+
+const updateCharacterRepo = async (character, id) => {
+    return await Character.update(character, {
+        where: {
+            id
+        },
+        returning: true,
+        plain: true
+    });
+};
+
+
+const deleteCharacterRepo = async (id) => {
+    return await Character.destroy({
+        where: {
+            id
+        }
+    });
+};
+
+
+module.exports = { getAllCharactersRepo, getCharacterByIdRepo, createNewCharacterRepo, updateCharacterRepo, deleteCharacterRepo };
