@@ -45,15 +45,28 @@ const getGenreByIdRepo = async ( id, genreAttributes, movieAttributes, character
 };
 
 
-const createNewGenreRepo = async (data) => {
-    return await Genre.create(data);
+const createNewGenreRepo = async (genre) => {
+    return await Genre.create(genre);
+};
+
+
+const updateGenreRepo = async (id, genre) => {
+    return await Genre.update(genre, {
+        where: {
+            id
+        },
+        returning: true,
+        plain: true
+    });
 };
 
 
 const deleteGenreRepo = async (id) => {
     return await Genre.destroy({
-        where: { id: id }
+        where: {
+            id
+        }
     });
-}
+};
 
-module.exports = { getAllGenresRepo, getGenreByIdRepo, createNewGenreRepo, deleteGenreRepo };
+module.exports = { getAllGenresRepo, getGenreByIdRepo, createNewGenreRepo, updateGenreRepo, deleteGenreRepo };
