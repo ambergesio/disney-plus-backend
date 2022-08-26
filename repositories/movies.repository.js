@@ -38,7 +38,35 @@ const getMovieByIdRepo = async ( id, movieAttributes, charactersAttributes, genr
             }
         ]
     });
-}
+};
 
 
-module.exports = { getAllMoviesRepo, getMovieByIdRepo };
+const createNewMovieRepo = async (movie) => {
+    return await Movie.create(movie,
+    {
+        include: Character
+    });
+};
+
+
+const updateMovieRepo = async (movie, id) => {
+    return await Movie.update(movie, {
+        where: {
+            id
+        },
+        returning: true,
+        plain: true
+    });
+};
+
+
+const deleteMovieRepo = async (id) => {
+    return await Movie.destroy({
+        where: {
+            id
+        }
+    });
+};
+
+
+module.exports = { getAllMoviesRepo, getMovieByIdRepo, createNewMovieRepo, updateMovieRepo, deleteMovieRepo };
