@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { getAllGenres, getGenreById, createNewGenre, updateGenre, deleteGenre } = require('../controllers/genres.controller');
-const { isAdmin } = require('../middlewares/isadmin');
+const { isAdmin } = require('../middlewares/isAdmin');
 
 
 router.get('/', getAllGenres);
