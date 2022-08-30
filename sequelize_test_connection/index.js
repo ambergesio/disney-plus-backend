@@ -9,10 +9,10 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 const connectToDatabase = () => {
     sequelize.authenticate()
     .then( () => {
-        console.log(`Connection to database ${sequelize.config.database} has been established successfully`);
+        console.log('\x1b[46m%s\x1b[0m',`Connection to database ${sequelize.config.database} has been established successfully`);
     })
     .catch( error => {
-        console.log('Unable to connect to database');
+        console.log('\x1b[41m%s\x1b[0m','Unable to connect to database');
     });
 };
 
