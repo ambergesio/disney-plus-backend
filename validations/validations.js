@@ -5,6 +5,7 @@ const phoneRE = /^\d{10}$/; //eslint-disable-line
 const dniRE = /^\d{7,8}$/; //eslint-disable-line
 const ageRE = /^[0-9]{2}$/; //eslint-disable-line
 const passwordRE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&#])[A-Za-z\d$@$!%*?&#]{8,20}$/; //eslint-disable-line
+const imageRE = /^[0-9a-zA-Z-_.:\/]{2,}$/; //eslint-disable-line
 
 const characterNameRE = /^[0-9a-zA-ZÁÉÍÓÚáéíóú\s]{2,}$/; //eslint-disable-line
 const characterAgeRE = /^[0-9]{1,3}$/; //eslint-disable-line
@@ -20,6 +21,7 @@ module.exports = {
     dniRE,
     ageRE,
     passwordRE,
+    imageRE,
     characterNameRE,
     characterAgeRE,
     characterWeightRE,
