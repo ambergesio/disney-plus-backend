@@ -10,7 +10,7 @@ const getAllMovies = async (req, res) => {
     try {
         const allMovies = await getAllMoviesService(req.query);
         if (!allMovies) return res.status(404).json({ error: true, message: "An error occurred when trying to get all movies."})
-        return res.status(200).json({ error: false, movies: allMovies });
+        return res.status(200).json({ error: false, data: allMovies });
     }
     catch (err) {
         return res.status(500).json({ error: true, message: `${err}`})
@@ -75,7 +75,7 @@ const updateMovie = (req, res) => {
         .status(200)
         .json({
             error: updateMovie.error,
-            message: `Movie with id ${req.params.is} updated successfuly.`,
+            message: `Movie with id ${req.params.id} updated successfuly.`,
             data: updateMovie.data
         });
     }
