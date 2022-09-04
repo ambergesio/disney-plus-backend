@@ -8,7 +8,7 @@ const signToken = async (data) => {
 
 
 const verifyToken = async (token) => {
-    return await jwt.verify(token, config.secret)
+    return await jwt.verify(token, config.secret);
 };
 
 
