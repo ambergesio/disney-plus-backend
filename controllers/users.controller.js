@@ -1,4 +1,4 @@
-const { signToken } = require('../middlewares/token');
+const { signToken, verifyToken } = require('../middlewares/token');
 const {
     createNewUserService,
     getAllUsersService,
@@ -82,6 +82,25 @@ const userLogin = async (req, res) => {
             error: true,
             message: `${error}`
         });
+    }
+};
+
+
+const userCheck = async (req, res) => {
+    // console.log('hola');
+    try {
+        if (!req.header('Authorization')) return res.status(400).json({ error: true, message: "Invalid Token. Must log in."});
+        
+        const token = req.header('Authorization').split(' ')[1];
+        const isUser = await verifyToken(token);
+        // console.log(isUser);
+        if (!isUser) return res.status(400).json({ error: true, message: "Invalid Token. Must log in."});
+
+        return res.status(200).json({ error: false, message: "Valid user, access granted."});
+
+    }
+    catch(error) {
+        return res.status(400).json({ error: true, message: error});
     }
 };
 
@@ -174,7 +193,7 @@ const updateUserPassword = async (req, res) => {
             message: `${error}`
         })
     }
-}
+};
 
 
 const deleteUser = async (req, res) => {
@@ -204,12 +223,13 @@ const deleteUser = async (req, res) => {
             message: `${error}`
         })
     }
-}
+};
 
 
 module.exports = {
     userRegister,
     userLogin,
+    userCheck,
     getAllUsers,
     updateUser,
     updateUserPassword,
