@@ -50,4 +50,13 @@ const validateUserUpdatePassword = (user) => {
 };
 
 
-module.exports = { validateUser, validateUserUpdate, validateUserUpdatePassword };
+const validateUserLogin = (user) => {
+    if (!user.email) return {error: true, message: 'You must provide an email.'} 
+    if (!emailRE.test(user.email)) return {error: true, message: 'You must provide a valid email address.'} 
+    if (!user.password) return {error: true, message: 'You must provide a password.'} 
+    if (!passwordRE.test(user.password)) return {error: true, message: 'You must provide a valid password. It must have between 8 and 20 characters and must contain at least one Capital letter, one number and one special character ($@$!%*?&#).'} 
+    return {error: false};
+};
+
+
+module.exports = { validateUser, validateUserUpdate, validateUserUpdatePassword, validateUserLogin };
