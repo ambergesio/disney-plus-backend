@@ -63,6 +63,7 @@ const Movie = sequelize.define('movie',
             unique: true,
             allowNull: false
         },
+        description: Sequelize.STRING(1024),
         date: Sequelize.STRING,
         rate: {
             type: Sequelize.INTEGER,
