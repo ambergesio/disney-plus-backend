@@ -2,14 +2,27 @@ const { signToken, verifyToken } = require('../middlewares/token');
 const {
     createNewUserService,
     getAllUsersService,
+    getUserByEmailService,
     updateUserService,
     updateUserPasswordService,
     userLoginService,
-    deleteUserService} = require('../services/users.service');
+    deleteUserService
+} = require('../services/users.service');
 
 
 const userRegister = async (req, res) => {
     try {
+        const { email } = req.body;
+        const isAlreadyUser = await getUserByEmailService(email);
+        if (isAlreadyUser) {
+            return res
+            .status(409)
+            .json({
+                error: true,
+                message: "User already registered. Sign up with another email address."
+            })
+        }
+
         const registerUser = await createNewUserService(req.body);
         if (registerUser.error === true) {
             return res
@@ -87,7 +100,6 @@ const userLogin = async (req, res) => {
 
 
 const userCheck = async (req, res) => {
-    // console.log('hola');
     try {
         if (!req.header('Authorization')) return res.status(400).json({ error: true, message: "Invalid Token. Must log in."});
         
@@ -197,7 +209,6 @@ const updateUserPassword = async (req, res) => {
 
 
 const deleteUser = async (req, res) => {
-    console.log(req.params)
     try {
         const deleteUser = await deleteUserService(req.params.id);
         if (!deleteUser) {
@@ -205,7 +216,7 @@ const deleteUser = async (req, res) => {
             .status(404)
             .json({
                 error: true,
-                message: `User with id ${req.params} could not be deleted.`
+                message: `User with id ${req.params.id} could not be deleted.`
             });
         }
         return res
