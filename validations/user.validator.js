@@ -58,5 +58,10 @@ const validateUserLogin = (user) => {
     return {error: false};
 };
 
+const validateEmail = (email) => {
+    if (!emailRE.test(email)) return { error: true, message: 'You must provide a valid email address.' };
+    return {error: false};
+}
 
-module.exports = { validateUser, validateUserUpdate, validateUserUpdatePassword, validateUserLogin };
+
+module.exports = { validateUser, validateUserUpdate, validateUserUpdatePassword, validateUserLogin, validateEmail };
