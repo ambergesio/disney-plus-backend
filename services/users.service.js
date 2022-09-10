@@ -1,4 +1,4 @@
-const { validateUser, validateUserUpdate, validateUserUpdatePassword, validateUserLogin } = require('../validations/user.validator');
+const { validateUser, validateUserUpdate, validateUserUpdatePassword, validateUserLogin, validateEmail } = require('../validations/user.validator');
 const { hashPassword, comparePassword } = require('../helpers/hash');
 const {
     createNewUserRepo,
@@ -43,6 +43,19 @@ const getAllUsersService = async () => {
         throw error;
     }
 };
+
+const getUserByEmailService = async (email) => {
+    try {
+        const validEmail = validateEmail(email);
+        if (!validEmail) {
+            return { error: true, message: 'Invalid email address.'};
+        }
+        return await getUserByEmailRepo(email);
+    }
+    catch (error) {
+        throw error;
+    }
+}
 
 
 const updateUserService = async (dataToUpdate, user) => {
@@ -127,6 +140,7 @@ const deleteUserService = async (id) => {
 module.exports = {
     createNewUserService,
     getAllUsersService,
+    getUserByEmailService,
     updateUserService,
     updateUserPasswordService,
     userLoginService,
