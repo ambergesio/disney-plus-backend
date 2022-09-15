@@ -41,7 +41,7 @@ const Character = sequelize.define('character',
         },
         age: Sequelize.INTEGER,
         weight: Sequelize.INTEGER,
-        history: Sequelize.STRING(1024),
+        history: Sequelize.TEXT('long'),
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
         deletedAt: Sequelize.DATE
@@ -63,7 +63,8 @@ const Movie = sequelize.define('movie',
             unique: true,
             allowNull: false
         },
-        description: Sequelize.STRING(1024),
+        description: Sequelize.TEXT('long'),
+        details: Sequelize.TEXT('long'),
         date: Sequelize.STRING,
         rate: {
             type: Sequelize.INTEGER,
