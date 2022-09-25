@@ -11,7 +11,7 @@ const isOwnerOrAdmin = async (req, res, next) => {
             .status(404)
             .json({
                 error: true,
-                message: '01-You must login in order to perform the action.'
+                message: 'You must login in order to perform the action.'
             });
         }
         const user = await verifyToken(token.split(' ')[1]);
@@ -47,7 +47,7 @@ const isOwnerOrAdmin = async (req, res, next) => {
                 .status(400)
                 .json({
                     error: true,
-                    message: '03-You do not have permission to perform the required action.'
+                    message: 'You do not have permission to perform the required action.'
                 });
             }
             const isValidUser = await getUserByEmailRepo(user.email);
@@ -56,7 +56,7 @@ const isOwnerOrAdmin = async (req, res, next) => {
                 .status(400)
                 .json({
                     error: true,
-                    message: '04-User not found'
+                    message: 'User not found'
                 });
             }
             if (isValidUser.email === user.email && user.email === ownedUser) {
@@ -73,7 +73,7 @@ const isOwnerOrAdmin = async (req, res, next) => {
                 .status(403)
                 .json({
                     error: true,
-                    message: '05-You do not have permission to perform the required action.'
+                    message: 'You do not have permission to perform the required action.'
                 });
             }
         }
