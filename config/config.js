@@ -10,7 +10,9 @@ const enviroment = {
         port: process.env.DB_PORT,
         dialect: "mysql",
         secret: process.env.SECRET,
-        fepath: process.env.FRONTPATH
+        fepath: process.env.FRONTPATH,
+        email_api_key: process.env.SENDGRID_API_KEY,
+        email_sender: process.env.EMAIL_SENDER
     },
     "production": {
         server_port: process.env.PORT,
@@ -21,7 +23,9 @@ const enviroment = {
         port: process.env.DB_PORT,
         dialect: "mysql",
         secret: process.env.SECRET,
-        fepath: process.env.FRONTPATH
+        fepath: process.env.FRONTPATH,
+        email_api_key: process.env.SENDGRID_API_KEY,
+        email_sender: process.env.EMAIL_SENDER
     }
 };
 

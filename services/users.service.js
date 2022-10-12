@@ -24,10 +24,8 @@ const createNewUserService = async (data) => {
         if ( validatedUser.error === true  ) {
             return { error: true, message: validatedUser.message}
         }
-        if ( validatedUser.error === false  ) {
-            user.password = await hashPassword(user.password);
-            return await createNewUserRepo(user);
-        }
+        user.password = await hashPassword(user.password);
+        return await createNewUserRepo(user);
     }
     catch (error) {
         throw error;

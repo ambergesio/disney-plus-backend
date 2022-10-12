@@ -20,7 +20,7 @@ const isOwnerOrAdmin = async (req, res, next) => {
             .status(400)
             .json({
                 error: true,
-                message: '02-Invalid token'
+                message: 'Invalid token'
             });
         }
         if (user.status === 'admin') {

@@ -1,4 +1,5 @@
 const { signToken, verifyToken } = require('../middlewares/token');
+const { welcomeRegistrationEmail } = require('../helpers/sendemail');
 const {
     createNewUserService,
     getAllUsersService,
@@ -12,7 +13,7 @@ const {
 
 const userRegister = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { firstName, email } = req.body;
         const isAlreadyUser = await getUserByEmailService(email);
         if (isAlreadyUser) {
             return res
@@ -41,7 +42,9 @@ const userRegister = async (req, res) => {
                 error: true,
                 message: 'User could not be registered'
             });
-        }
+        };
+        const subject = 'Registro exitoso en Disney Plus';
+        await welcomeRegistrationEmail(firstName, email, subject);
         return res
         .status(201)
         .setHeader('Content-Type', 'application/json')
