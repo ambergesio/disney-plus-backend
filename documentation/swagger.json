@@ -1,0 +1,118 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Disney RESTful API in Express Node js",
+      "version": "1.0.0",
+      "description":
+        "This is a REST API application made with Express.",
+      "contact": {
+        "name": "Abel Martin Bergesio - abelmartinbergesio@icloud.com",
+        "url": "https://github.com/ambergesio"
+      }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:5001/api/v1"
+      }
+    ],
+
+    
+    
+    "tags": [
+      {
+        "name": "Auth",
+        "description": "User authentication and registration (user credentials and token)"
+      },
+      {
+        "name": "Characters",
+        "description": "Disney movie's characters"
+      },
+      {
+        "name": "Movies",
+        "description": "All Disney Movies"
+      },
+      {
+        "name": "Genres",
+        "description": "Movies by genres"
+      }
+    ],
+
+
+    "paths": {
+
+
+      "/auth/register": {
+
+        "post": {
+          "tags": ["Auth"],
+          "summary": "User registration",
+          "description": "Register a new user",
+          "requestBody": {
+            "description": "Register a new user by email in the platform",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userRegistration"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/registeredUser"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid ID supplied"
+            },
+            "404": {
+              "description": "Pet not found"
+            },
+            "405": {
+              "description": "Validation exception"
+            }
+          }
+        }
+      }
+
+    },
+
+
+    "components": {
+      "schemas": {
+        "userRegistration": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "johndoe@gmail.com"
+            },
+            "firstName": {
+              "type": "string",
+              "example": "John"
+            },
+            "lastName": {
+              "type": "string",
+              "example": "Doe"
+            },
+            "password": {
+              "type": "string",
+              "example": "Pass@1234"
+            }
+          }
+        },
+        "registeredUser": {
+            "type": "object",
+            "properties": {
+                
+            }
+        }
+      }
+    }
+  }
