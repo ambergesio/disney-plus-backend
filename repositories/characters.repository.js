@@ -22,6 +22,31 @@ const getAllCharactersRepo = async ( characterAttributes, movieAttributes, genre
     });
 };
 
+const getCharacterByQueryRepo = async ( queryparam, characterAttributes, movieAttributes, genreAttributes) => {
+    return await Character.findAll({
+        where: queryparam,
+        include: [
+            {
+                model: Movie,
+                include: [
+                    {
+                        model: Genre,
+                        attributes: genreAttributes,
+                    }
+                ],
+                attributes: movieAttributes,
+                through: {
+                    attributes: []
+                }
+            }
+        ],
+        attributes: characterAttributes,
+        through: {
+            attributes: []
+        }
+    })
+}
+
 
 const getCharacterByIdRepo = async ( id, characterAttributes, movieAttributes, genreAttributes) => {
     return await Character.findByPk( id, {
@@ -77,4 +102,11 @@ const deleteCharacterRepo = async (id) => {
 };
 
 
-module.exports = { getAllCharactersRepo, getCharacterByIdRepo, createNewCharacterRepo, updateCharacterRepo, deleteCharacterRepo };
+module.exports = {
+    getAllCharactersRepo,
+    getCharacterByQueryRepo,
+    getCharacterByIdRepo,
+    createNewCharacterRepo,
+    updateCharacterRepo,
+    deleteCharacterRepo
+};

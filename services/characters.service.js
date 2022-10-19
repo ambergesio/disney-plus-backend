@@ -1,6 +1,7 @@
 const validateCharacter = require('../validations/character.validator');
 const {
     getAllCharactersRepo,
+    getCharacterByQueryRepo,
     getCharacterByIdRepo,
     createNewCharacterRepo,
     updateCharacterRepo,
@@ -14,6 +15,19 @@ const getAllCharactersService = async (query) => {
         const movieAttributes = query?.movie?.split('-') || ['title'];
         const genreAttributes = query?.genre?.split('-') || ['name'];
         return await getAllCharactersRepo(characterAttributes, movieAttributes, genreAttributes);
+    }
+    catch (error) {
+        throw error;
+    }
+};
+
+
+const getCharacterByQueryService = async (queryparam, query) => {
+    try {
+        const characterAttributes = query?.character?.split('-') || ['name','image'];
+        const movieAttributes = query?.movie?.split('-') || ['title'];
+        const genreAttributes = query?.genre?.split('-') || ['name'];
+        return await getCharacterByQueryRepo(queryparam, characterAttributes, movieAttributes, genreAttributes);
     }
     catch (error) {
         throw error;
@@ -74,6 +88,7 @@ const deleteCharacterService = async (id) => {
 
 module.exports = {
     getAllCharactersService,
+    getCharacterByQueryService,
     getCharacterByIdService,
     createNewCharacterService,
     updateCharacterService,

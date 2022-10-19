@@ -1,13 +1,77 @@
 const {
     getAllCharactersService,
+    getCharacterByQueryService,
     getCharacterByIdService,
     createNewCharacterService,
     updateCharacterService,
     deleteCharacterService } = require('../services/characters.service');
+    const { Op } = require("sequelize");
 
 
 const getAllCharacters = async (req, res) => {
-    try{
+    if (req.query.name) {
+        try {
+            const nameQuery = { name: {[Op.like]: `%${req.query.name}%`} };
+            const characterByName = await getCharacterByQueryService(nameQuery, req.query);
+            if (!characterByName.length) {
+                return res
+                .status(404)
+                .setHeader('Content-Type', 'application/json')
+                .json({ 
+                    error: true,
+                    message: `Character with name ${req.query.name} not found.`
+                })
+            };
+            return res
+                .status(200)
+                .setHeader('Content-Type', 'application/json')
+                .json({
+                    error: false,
+                    message: `Search by name: '${req.query.name}'`,
+                    data: characterByName
+                })
+        }
+        catch (error) {
+            return res
+            .status(500)
+            .json({ 
+                error: true,
+                message: `${error}`
+            });
+        }
+    }
+    if (req.query.age) {
+        try {
+            const nameQuery = { age: req.query.age };
+            const characterByAge = await getCharacterByQueryService(nameQuery, req.query);
+            if (!characterByAge.length) {
+                return res
+                .status(404)
+                .setHeader('Content-Type', 'application/json')
+                .json({ 
+                    error: true,
+                    message: `Character with age ${req.query.age} not found.`
+                })
+            };
+            return res
+                .status(200)
+                .setHeader('Content-Type', 'application/json')
+                .json({
+                    error: false,
+                    message: `Search by age: '${req.query.age}'`,
+                    data: characterByAge
+                })
+        }
+        catch (error) {
+            return res
+            .status(500)
+            .json({ 
+                error: true,
+                message: `${error}`
+            });
+        }
+    }
+    try {
         const allCharacters = await getAllCharactersService(req.query);
         if (!allCharacters) {
             return res
@@ -23,7 +87,7 @@ const getAllCharacters = async (req, res) => {
         .setHeader('Content-Type', 'application/json')
         .json({ 
             error: false,
-            message: 'All characters successfully obtained',
+            message: 'All characters successfully retrieved',
             characters: allCharacters
         });
     }
