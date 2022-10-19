@@ -21,6 +21,30 @@ const getAllMoviesRepo = async ( moviesAttributes, charactersAttributes, genreAt
 };
 
 
+const getMovieByQueryRepo = async (queryParam, moviesAttributes, charactersAttributes, genreAttributes ) => {
+    return await Movie.findAll({
+        where: queryParam,
+        include: [
+            {
+                model: Genre,
+                attributes: genreAttributes
+            },
+            {
+                model: Character,
+                attributes:  charactersAttributes,
+                through: {
+                    attributes: []
+                }
+            }
+        ],
+        attributes: moviesAttributes,
+        through: {
+            attributes: []
+        }
+    });
+};
+
+
 const getMovieByIdRepo = async ( id, movieAttributes, charactersAttributes, genreAttributes ) => {
     return await Movie.findByPk( id, {
         attributes: movieAttributes,
@@ -69,4 +93,11 @@ const deleteMovieRepo = async (id) => {
 };
 
 
-module.exports = { getAllMoviesRepo, getMovieByIdRepo, createNewMovieRepo, updateMovieRepo, deleteMovieRepo };
+module.exports = {
+    getAllMoviesRepo,
+    getMovieByQueryRepo,
+    getMovieByIdRepo,
+    createNewMovieRepo,
+    updateMovieRepo,
+    deleteMovieRepo
+};

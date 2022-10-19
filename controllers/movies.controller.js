@@ -1,19 +1,111 @@
 const {
     getAllMoviesService,
+    getMovieByQueryService,
     getMovieByIdService,
     createNewMovieService,
     deleteMovieService,
-    updateMovieService } = require('../services/movies.service');
+    updateMovieService
+} = require('../services/movies.service');
+
+const { Op } = require("sequelize");
 
 
 const getAllMovies = async (req, res) => {
+    if (req.query.title) {
+        try {
+            const titleQuery = { title: {[Op.like]: `%${req.query.title}%`} };
+            const getMovieByTitle = await getMovieByQueryService(titleQuery, req.query);
+            if (!getMovieByTitle.length) {
+                return res
+                .status(404)
+                .setHeader('Content-Type', 'application/json')
+                .json({
+                    error: true,
+                    message: `Movie with title '${req.query.title}' not found.`
+                })
+            }
+            return res
+            .status(200)
+            .setHeader('Content-Type', 'application/json')
+            .json({
+                error: false,
+                message: `Movie with title ${req.query.title} retrieved successfully.`,
+                data: getMovieByTitle
+            })
+        }
+        catch (error) {
+            return res
+            .status(500)
+            .setHeader('Content-Type', 'application/json')
+            .json({
+                error: true,
+                message: `${error}`,
+            })
+        }
+    }
+
+    if (req.query.genreid) {
+        try {
+            const genreIdQuery = { genreId: req.query.genreid };
+            const getMovieByGenreId = await getMovieByQueryService(genreIdQuery, req.query);
+            if (!getMovieByGenreId.length) {
+                return res
+                .status(404)
+                .setHeader('Content-Type', 'application/json')
+                .json({
+                    error: true,
+                    message: `No movies found with genre id '${req.query.genreid}'.`
+                })
+            }
+            return res
+            .status(200)
+            .setHeader('Content-Type', 'application/json')
+            .json({
+                error: false,
+                message: `All movies with genre id ${req.query.genreid} retrieved successfully.`,
+                data: getMovieByGenreId
+            })
+        }
+        catch (error) {
+            return res
+            .status(500)
+            .setHeader('Content-Type', 'application/json')
+            .json({
+                error: true,
+                message: `${error}`,
+            })
+        }
+    }
+
+
     try {
         const allMovies = await getAllMoviesService(req.query);
-        if (!allMovies) return res.status(404).json({ error: true, message: "An error occurred when trying to get all movies."})
-        return res.status(200).json({ error: false, data: allMovies });
+        if (!allMovies) {
+            return res
+            .status(404)
+            .setHeader('Content-Type', 'application/json')
+            .json({ 
+                error: true,
+                message: "An error occurred when trying to get all movies."
+            })
+        }
+        return res
+        .status(200)
+        .setHeader('Content-Type', 'application/json')
+        .json({
+            error: false,
+            message: 'All movies retrieved successfully',
+            data: allMovies
+        });
     }
-    catch (err) {
-        return res.status(500).json({ error: true, message: `${err}`})
+    catch (error) {
+        return res
+        .status(500)
+        .setHeader('Content-Type', 'application/json')
+        .json({
+            error: true,
+            message: `${error}`
+        })
     }
 };
 
@@ -21,11 +113,32 @@ const getAllMovies = async (req, res) => {
 const getMovieById = async (req, res) => {
     try {
         const movieById = await getMovieByIdService(req.params, req.query);
-        if (!movieById) return res.status(404).setHeader('Content-Type', 'application/json').json({ error: true, message: `Movie with id ${req.params.id} not found`});
-        return res.status(200).setHeader('Content-Type', 'application/json').json({ error: false, data: movieById });
+        if (!movieById) {
+            return res
+            .status(404)
+            .setHeader('Content-Type', 'application/json')
+            .json({ 
+                error: true,
+                message: `Movie with id ${req.params.id} not found`
+            });
+        }
+        return res
+        .status(200)
+        .setHeader('Content-Type', 'application/json')
+        .json({ 
+            error: false,
+            message: `Movie with id ${req.params.id} retrieved successfully.`,
+            data: movieById
+        });
     }
     catch (error) {
-        return res.status(500).setHeader('Content-Type', 'application/json').json({ error: true, message: `${error}`});
+        return res
+        .status(500)
+        .setHeader('Content-Type', 'application/json')
+        .json({
+            error: true,
+            message: `${error}`
+        });
     };
 };
 

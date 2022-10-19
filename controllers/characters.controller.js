@@ -4,8 +4,10 @@ const {
     getCharacterByIdService,
     createNewCharacterService,
     updateCharacterService,
-    deleteCharacterService } = require('../services/characters.service');
-    const { Op } = require("sequelize");
+    deleteCharacterService
+} = require('../services/characters.service');
+
+const { Op } = require("sequelize");
 
 
 const getAllCharacters = async (req, res) => {
@@ -23,13 +25,13 @@ const getAllCharacters = async (req, res) => {
                 })
             };
             return res
-                .status(200)
-                .setHeader('Content-Type', 'application/json')
-                .json({
-                    error: false,
-                    message: `Search by name: '${req.query.name}'`,
-                    data: characterByName
-                })
+            .status(200)
+            .setHeader('Content-Type', 'application/json')
+            .json({
+                error: false,
+                message: `Search by name: '${req.query.name}'`,
+                data: characterByName
+            })
         }
         catch (error) {
             return res
@@ -54,13 +56,13 @@ const getAllCharacters = async (req, res) => {
                 })
             };
             return res
-                .status(200)
-                .setHeader('Content-Type', 'application/json')
-                .json({
-                    error: false,
-                    message: `Search by age: '${req.query.age}'`,
-                    data: characterByAge
-                })
+            .status(200)
+            .setHeader('Content-Type', 'application/json')
+            .json({
+                error: false,
+                message: `Search by age: '${req.query.age}'`,
+                data: characterByAge
+            })
         }
         catch (error) {
             return res

@@ -1,5 +1,6 @@
 const {
     getAllMoviesRepo,
+    getMovieByQueryRepo,
     getMovieByIdRepo,
     createNewMovieRepo,
     updateMovieRepo,
@@ -18,6 +19,19 @@ const getAllMoviesService = async (query) => {
         throw error;
     }
 };
+
+
+const getMovieByQueryService = async (queryParam, query) => {
+    try {
+        const movieAttributes = query?.movie?.split('-') || ['title', 'date'];
+        const charactersAttributes = query?.character?.split('-') || ['name'];
+        const genreAttributes = query?.genre?.split('-') || ['name'];
+        return await getMovieByQueryRepo(queryParam, movieAttributes, charactersAttributes, genreAttributes);
+    }
+    catch (error) {
+        throw error;
+    }
+}
 
 
 const getMovieByIdService = async (param, query) => {
@@ -68,6 +82,7 @@ const deleteMovieService = async (id) => {
 
 module.exports = {
     getAllMoviesService,
+    getMovieByQueryService,
     getMovieByIdService,
     createNewMovieService,
     updateMovieService,
