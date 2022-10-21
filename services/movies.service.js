@@ -60,7 +60,7 @@ const createNewMovieService = async (movie) => {
 const updateMovieService = async (movie, id) => {
     try {
         const updated =  await updateMovieRepo(movie, id);
-        if (updated[0] === 0) return { error: true };
+        if (updated[1] === 0 || !updated[1]) return { error: true };
         const updatedMovie =  await getMovieByIdService({ id: id });
         return { error: false, data: updatedMovie};
     }

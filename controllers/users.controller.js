@@ -13,7 +13,10 @@ const {
 
 const userRegister = async (req, res) => {
     try {
+        if (!req.body.email) return res.status(400).json({ error: true, message: "You must provide a valid email in order to continue."});
+        if (!req.body.firstName) return res.status(400).json({ error: true, message: "You must provide a valid name in order to continue."});
         const { firstName, email } = req.body;
+
         const isAlreadyUser = await getUserByEmailService(email);
         if (isAlreadyUser) {
             return res

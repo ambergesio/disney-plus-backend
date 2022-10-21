@@ -29,7 +29,7 @@ const getAllMovies = async (req, res) => {
             .setHeader('Content-Type', 'application/json')
             .json({
                 error: false,
-                message: `Movie with title ${req.query.title} retrieved successfully.`,
+                message: `Movie with title '${req.query.title}' retrieved successfully.`,
                 data: getMovieByTitle
             })
         }
@@ -44,9 +44,10 @@ const getAllMovies = async (req, res) => {
         }
     }
 
-    if (req.query.genreid) {
+    if (req.query.genreId) {
+        console.log(req.query.genreId);
         try {
-            const genreIdQuery = { genreId: req.query.genreid };
+            const genreIdQuery = { genreId: req.query.genreId };
             const getMovieByGenreId = await getMovieByQueryService(genreIdQuery, req.query);
             if (!getMovieByGenreId.length) {
                 return res
@@ -54,7 +55,7 @@ const getAllMovies = async (req, res) => {
                 .setHeader('Content-Type', 'application/json')
                 .json({
                     error: true,
-                    message: `No movies found with genre id '${req.query.genreid}'.`
+                    message: `No movies found with genre id '${req.query.genreId}'.`
                 })
             }
             return res
@@ -62,7 +63,7 @@ const getAllMovies = async (req, res) => {
             .setHeader('Content-Type', 'application/json')
             .json({
                 error: false,
-                message: `All movies with genre id ${req.query.genreid} retrieved successfully.`,
+                message: `All movies with genre id '${req.query.genreId}' retrieved successfully.`,
                 data: getMovieByGenreId
             })
         }
@@ -119,7 +120,7 @@ const getMovieById = async (req, res) => {
             .setHeader('Content-Type', 'application/json')
             .json({ 
                 error: true,
-                message: `Movie with id ${req.params.id} not found`
+                message: `Movie with id '${req.params.id}' not found`
             });
         }
         return res
@@ -127,7 +128,7 @@ const getMovieById = async (req, res) => {
         .setHeader('Content-Type', 'application/json')
         .json({ 
             error: false,
-            message: `Movie with id ${req.params.id} retrieved successfully.`,
+            message: `Movie with id '${req.params.id}' retrieved successfully.`,
             data: movieById
         });
     }
@@ -173,22 +174,22 @@ const createNewMovie = async (req, res) => {
 };
 
 
-const updateMovie = (req, res) => {
+const updateMovie = async (req, res) => {
     try {
-        const updateMovie = updateMovieService(req.body, req.params.id);
+        const updateMovie = await updateMovieService(req.body, req.params.id);
         if (updateMovie.error) {
             return res
             .status(404)
             .json({
                 error: true,
-                message: `Movie with id ${req.params.id} could not be updated because it may not exist.`
+                message: `Movie with id '${req.params.id}' could not be updated because it may not exist.`
             })
         }
         return res
         .status(200)
         .json({
-            error: updateMovie.error,
-            message: `Movie with id ${req.params.id} updated successfuly.`,
+            error: false,
+            message: `Movie with id '${req.params.id}' updated successfuly.`,
             data: updateMovie.data
         });
     }
@@ -211,14 +212,14 @@ const deleteMovie = async (req, res) => {
             .status(404)
             .json({
                 error: true,
-                message: `Movie with id ${req.params.id} not found. It may not exist or may be deleted already.`
+                message: `Movie with id '${req.params.id}' not found. It may not exist or may be deleted already.`
             })
         }
         return res
         .status(200)
         .json({
             error: false,
-            data: `Movie with id ${req.params.id} successfully deleted.`
+            data: `Movie with id '${req.params.id}' successfully deleted.`
         });
     }
     catch (error) {

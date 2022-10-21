@@ -9,7 +9,7 @@ const {
 
 const getAllGenresService = async (query) => {
     try {
-        const genreAttributes = query?.genre?.split('-') || ['name'];
+        const genreAttributes = query?.genre?.split('-') || ['name', 'id'];
         const movieAttributes = query?.movie?.split('-') || ['title'];
         const characterAttributes = query?.character?.split('-') || ['name'];
         return await getAllGenresRepo(genreAttributes, movieAttributes, characterAttributes);
@@ -22,7 +22,7 @@ const getAllGenresService = async (query) => {
 
 const getGenreByIdService = async (params, query) => {
     try {
-        const genreAttributes = query?.genre?.split('-') || ['name'];
+        const genreAttributes = query?.genre?.split('-') || ['name', 'id'];
         const movieAttributes = query?.movie?.split('-') || ['title'];
         const characterAttributes = query?.character?.split('-') || ['name'];
         return await getGenreByIdRepo( params.id, genreAttributes, movieAttributes, characterAttributes);
@@ -50,7 +50,7 @@ const createNewGenreService = async (data) => {
 const updateGenreService = async (id, genre) => {
     try {
         const updated =  await updateGenreRepo(id, genre);
-        if (updated[0] === 0) return { error: true };
+        if (updated[1] === 0 || !updated[1]) return { error: true };
         const updatedGenre =  await getGenreByIdService({ id: id });
         return { error: false, data: updatedGenre };
     }

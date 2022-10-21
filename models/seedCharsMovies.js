@@ -23,6 +23,10 @@ const moviechar = async () => {
     });
     await Character_Movie.create({
         characterId: 3,
+        movieId: 2
+    });
+    await Character_Movie.create({
+        characterId: 3,
         movieId: 3
     });
     await Character_Movie.create({

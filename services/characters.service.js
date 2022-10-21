@@ -66,7 +66,7 @@ const createNewCharacterService = async (char) => {
 const updateCharacterService = async (character, id) => {
     try {
         const updated = await updateCharacterRepo(character, id);
-        if (updated[0] === 0) return { error: true };
+        if (updated[1] === 0 || !updated[1]) return { error: true };
         const updatedChar =  await getCharacterByIdRepo(id);
         return { error: false, data: updatedChar };
     }

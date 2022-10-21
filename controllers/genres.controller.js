@@ -101,17 +101,17 @@ const updateGenre = async (req, res) => {
         const genreUpdated = await updateGenreService(req.params.id, req.body);
         if (genreUpdated.error) {
             return res
-            .status(400)
+            .status(404)
             .json({
                 error: true,
-                message: 'Genre coluld not be updated.'
+                message: `Genre with id '${req.params.id}' could not be updated.`
             });
         }
         return res
         .status(200)
         .json({
             error: genreUpdated.error,
-            message: `Genre with id ${req.params.id} updated successfully.`,
+            message: `Genre with id '${req.params.id}' updated successfully.`,
             data: genreUpdated.data
         });
     }
@@ -131,21 +131,21 @@ const deleteGenre = async (req, res) => {
         const deleteGenre = await deleteGenreService(req.params);
         if (!deleteGenre) {
             return res
-            .status(409)
+            .status(404)
             .json({
                 error: true,
-                message: `Genre with id ${req.params.id} could not be deleted because it may not exist or has been already deleted.`
+                message: `Genre with id '${req.params.id}' could not be deleted because it may not exist or has been already deleted.`
             })
         }
         return res
         .status(200)
         .json({
             error: false,
-            message: `Genre with id ${req.params.id} deleted successfully.`
+            message: `Genre with id '${req.params.id}' deleted successfully.`
         })
     }
     catch (error) {
-        return res.status(600)
+        return res.status(500)
         .json({
             error: true,
             message: `${error}`,

@@ -15,9 +15,6 @@
         "url": "http://localhost:5001/api/v1"
       }
     ],
-
-    
-    
     "tags": [
       {
         "name": "Auth",
@@ -25,21 +22,20 @@
       },
       {
         "name": "Characters",
-        "description": "Disney movie's characters"
+        "description": "Disney characters"
       },
       {
         "name": "Movies",
-        "description": "All Disney Movies"
+        "description": "Disney Movies"
       },
       {
         "name": "Genres",
-        "description": "Movies by genres"
+        "description": "Movie genres"
       }
     ],
 
 
     "paths": {
-
 
       "/auth/register": {
 
@@ -58,34 +54,2929 @@
             }
           },
           "responses": {
-            "200": {
-              "description": "Successful operation",
+
+            "201": {
+              "description": "User registered successfully",
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/registeredUser"
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false" 
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "User registered successfully, You must login in order to continue."
+                      }
+                    }
                   }
                 }
               }
             },
             "400": {
-              "description": "Invalid ID supplied"
+              "description": "Invalid registration",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "User already registered. Sign up with another email address."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Error: Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                        "error": {
+                          "type": "boolean",
+                          "example": "true"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "User already registered. Sign up with another email address."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "/auth/login": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "User login",
+          "description": "User login with email and password",
+          "requestBody": {
+            "description": "Send user email and password to login and get a token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "johndoe@gmail.com"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "Pass@1234"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+
+            "200": {
+              "description": "User logged successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                        "error": {
+                          "type": "boolean",
+                          "example": "false"                        
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "User logged successfully"
+                        },
+                        "user": {
+                          "type": "object",
+                          "example": {
+                            "id": 1,
+                            "email": "johndoe@gmail.com",
+                            "firstName": "John",
+                            "lastName": "Doe",
+                            "status": "user"
+                          }
+                        },
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJqb2huZG9lQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6IkpvaG4iLCJsYXN0TmFtZSI6IkRvZSIsInN0YXR1cyI6InVzZXIiLCJpYXQiOjE2NjYyMTM4NzgsImV4cCI6MTY2NjIyMTA3OH0.85DBkslzFU6FNCLs_xoEZCcyNwCQk-kanDoTxAWzvvw"
+                        }
+                      }
+                    }
+                  }
+                }
+            },
+
+            "400": {
+              "description": "User login error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error":{
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "User does not exist"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "/characters": {
+        "post": {
+          "security": [ { "bearerAuth": [] } ],
+          "tags": ["Characters"],
+          "summary": "Create a new character",
+          "description": "The endpoint will create a new charactere. Admin only",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/newCharacter"
+                }
+              }
+            }
+          },
+          "responses": {
+
+            "200": {
+              "description": "New character created",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "New character created"
+                      },
+                      "data": {
+                        "type": "object",
+                        "example": {
+                          "id": 0,
+                          "image": "images/characters/cinderella.jpg",
+                          "name": "Cinderella",
+                          "age": 23,
+                          "weight": 120,
+                          "history": "This is the history of cinderella.",
+                          "updatedAt": "xxx-xx-xxTxx:xx:xx.xxxx",
+                          "createdAt": "xxx-xx-xxTxx:xx:xx.xxxx"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "400": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "No data found, please try again."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "You must login in order to perform the action."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "get": {
+          "tags": ["Characters"],
+          "summary": "Get all characters",
+          "description": "The endpoint will retrieve all characters stored in the database with the movies they are in, and movies genres. By default, the endpoint will retrieve character's name, movie's title and genre with genre's name.",
+          "responses": {
+
+            "200": {
+              "description": "All characters retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "All characters successfully retrieved"
+                      },
+                      "characters": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "name": "Donald Duck",
+                            "movies": [
+                              {
+                                "title": "Los Tres Mosqueteros",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              },
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Goofy",
+                            "movies": [
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Mickey Mouse",
+                            "movies": [
+                              {
+                                "title": "Steamboat Willie",
+                                "genre": {
+                                  "name": "Cartoon short"
+                                }
+                              },
+                              {
+                                "title": "Los Tres Mosqueteros",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              },
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Minnie Mouse",
+                            "movies": [
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Pluto",
+                            "movies": [
+                              {
+                                "title": "Steamboat Willie",
+                                "genre": {
+                                  "name": "Cartoon short"
+                                }
+                              },
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "400": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "No data found, please try again."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+      },
+
+      "/characters?": {
+        "get": {
+          "tags": ["Characters"],
+          "summary": "Get all characters with optional query params for specific values",
+          "description": "Specific values can be retrieved for 'character', 'movie', and 'genre' by sending query params separated by a hyphen with no spaces. Example: 'http://localhost:5001/api/v1/characters?character=name-image-age&movie=title-image-rate&genre=name-id'.",
+          "parameters": [
+            {
+              "in": "query",
+              "style": "form",
+              "name": "character",
+              "description": "Character query params separated by '-'. Possible values are: id, image, name, age, weight, and history",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "movie",
+              "description": "movie query params separated by '-'. Possible values are: id, image, title, description, details, date, rate, and genreId",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "genre",
+              "description": "genre query params separated by '-'. Possible values are: id, name, and image",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            }
+          ],
+
+          "responses": {
+          
+            "200": {
+              "description": "All characters successfully retrieved",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "All characters successfully retrieved"
+                      },
+                      "characters": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "name": "Mickey Mouse",
+                            "image": "images/characters/mickey.jpg",
+                            "age": 94,
+                            "movies": [
+                              {
+                                "title": "Steamboat Willie",
+                                "image": "images/movies/steam-boat-willie",
+                                "rate": 5,
+                                "genre": {
+                                  "name": "Cartoon short",
+                                  "image": "images/genres/cartoon-short.jpeg",
+                                  "id": 1
+                                }
+                              },
+                              {
+                                "title": "Los Tres Mosqueteros",
+                                "image": "images/movies/tres-mosqueteros",
+                                "rate": 4,
+                                "genre": {
+                                  "name": "Animation",
+                                  "image": "images/genres/animation.jpg",
+                                  "id": 2
+                                }
+                              },
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "image": "images/movies/twice-upon",
+                                "rate": 5,
+                                "genre": {
+                                  "name": "Animation",
+                                  "image": "images/genres/animation.jpg",
+                                  "id": 2
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Donald Duck",
+                            "image": "images/characters/donald.jpg",
+                            "age": 86,
+                            "movies": [
+                              {
+                                "title": "Los Tres Mosqueteros",
+                                "image": "images/movies/tres-mosqueteros",
+                                "rate": 4,
+                                "genre": {
+                                  "name": "Animation",
+                                  "image": "images/genres/animation.jpg",
+                                  "id": 2
+                                }
+                              },
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "image": "images/movies/twice-upon",
+                                "rate": 5,
+                                "genre": {
+                                  "name": "Animation",
+                                  "image": "images/genres/animation.jpg",
+                                  "id": 2
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Goofy",
+                            "image": "images/characters/goofy.jpg",
+                            "age": 90,
+                            "movies": [
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "image": "images/movies/twice-upon",
+                                "rate": 5,
+                                "genre": {
+                                  "name": "Animation",
+                                  "image": "images/genres/animation.jpg",
+                                  "id": 2
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Minnie Mouse",
+                            "image": "images/characters/minnie.jpg",
+                            "age": 93,
+                            "movies": [
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "image": "images/movies/twice-upon",
+                                "rate": 5,
+                                "genre": {
+                                  "name": "Animation",
+                                  "image": "images/genres/animation.jpg",
+                                  "id": 2
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Pluto",
+                            "image": "images/characters/pluto.jpg",
+                            "age": 85,
+                            "movies": [
+                              {
+                                "title": "Steamboat Willie",
+                                "image": "images/movies/steam-boat-willie",
+                                "rate": 5,
+                                "genre": {
+                                  "name": "Cartoon short",
+                                  "image": "images/genres/cartoon-short.jpeg",
+                                  "id": 1
+                                }
+                              },
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "image": "images/movies/twice-upon",
+                                "rate": 5,
+                                "genre": {
+                                  "name": "Animation",
+                                  "image": "images/genres/animation.jpg",
+                                  "id": 2
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Could not retrieve data, please try again."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "/characters?name": {
+        "get": {
+          "tags": ["Characters"],
+          "summary": "Get characters by name",
+          "description": "Get characters by name. Specific characters can be retrieved by query params 'name'. In addition, query params 'character', 'movie', and 'genre' with values separated by '-' can be sent to obtain specific character values",
+          "parameters": [
+            {
+              "in": "query",
+              "style": "form",
+              "name": "name",
+              "description": "Search characters by name",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "character",
+              "description": "Character query params separated by '-'. Possible values are: id, image, name, age, weight, and history",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "movie",
+              "description": "movie query params separated by '-'. Possible values are: id, image, title, description, details, date, rate, and genreId",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "genre",
+              "description": "genre query params separated by '-'. Possible values are: id, name, and image",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            }
+          ],
+          
+          
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Search by name: 'mouse'"
+                      },
+                      "data": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "name": "Mickey Mouse",
+                            "image": "images/characters/mickey.jpg",
+                            "movies": [
+                              {
+                                "title": "Steamboat Willie",
+                                "genre": {
+                                  "name": "Cartoon short"
+                                }
+                              },
+                              {
+                                "title": "Los Tres Mosqueteros",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              },
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Minnie Mouse",
+                            "image": "images/characters/minnie.jpg",
+                            "movies": [
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with name '' not found."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "/characters?age": {
+        "get": {
+          "tags": ["Characters"],
+          "summary": "Get characters by age",
+          "description": "Get characters by age. Specific characters can be retrieved by query params 'age'. In addition, query params 'character', 'movie', and 'genre' with values separated by '-' can be sent to obtain specific character values",
+          "parameters": [
+            {
+              "in": "query",
+              "style": "form",
+              "name": "age",
+              "description": "Search characters by age",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "character",
+              "description": "Character query params separated by '-'. Possible values are: id, image, name, age, weight, and history",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "movie",
+              "description": "movie query params separated by '-'. Possible values are: id, image, title, description, details, date, rate, and genreId",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "genre",
+              "description": "genre query params separated by '-'. Possible values are: id, name, and image",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            }
+          ],
+          
+          
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Search by age: '86'"
+                      },
+                      "data": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "name": "Donald Duck",
+                            "age": 86,
+                            "image": "images/characters/donald.jpg",
+                            "movies": [
+                              {
+                                "title": "Los Tres Mosqueteros",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              },
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "genre": {
+                                  "name": "Animation"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with name '' not found."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "/characters/{id}": {
+        "get": {
+          "tags": ["Characters"],
+          "summary": "Get character by ID",
+          "description": "Get a character by its id number",
+          "parameters": [
+            {
+              "in": "path",
+              "style": "form",
+              "name": "id",
+              "description": "character id",
+              "schema": {
+                "type": "number"
+              },
+              "required": "true"
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "character",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "movie",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "genre",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+
+            "200": {
+              "description": "Character retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character found"
+                      },
+                      "data": {
+                        "type": "object",
+                        "example": {
+                          "name": "Mickey Mouse",
+                          "movies": [
+                            {
+                              "title": "Steamboat Willie",
+                              "genre": {
+                                "name": "Cartoon short"
+                              }
+                            },
+                            {
+                              "title": "Los Tres Mosqueteros",
+                              "genre": {
+                                "name": "Animation"
+                              }
+                            },
+                            {
+                              "title": "Mickeys Twice Upon a Christmas",
+                              "genre": {
+                                "name": "Animation"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             },
             "404": {
-              "description": "Pet not found"
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with id {id} not found."
+                      }
+                    }
+                  }
+                }
+              }
             },
-            "405": {
-              "description": "Validation exception"
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "put": {
+          "security": [ { "bearerAuth": [] } ],
+          "tags": ["Characters"],
+          "summary": "Update character by ID",
+          "description": "Update a character by its id number. Admin only",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/newCharacter"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "in": "path",
+              "style": "form",
+              "name": "id",
+              "description": "character id",
+              "schema": {
+                "type": "number"
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+
+            "200": {
+              "description": "Character updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character found"
+                      },
+                      "data": {
+                        "type": "object",
+                        "example": {
+                          "id": 0,
+                          "image": "images/characters/character.jpg",
+                          "name": "character name",
+                          "age": 0,
+                          "weight": 0,
+                          "history": "Character history",
+                          "createdAt": "2022-10-20T06:26:29.000Z",
+                          "updatedAt": "2022-10-20T07:56:25.000Z",
+                          "deletedAt": null,
+                          "movies": []
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "You must login in order to perform the action."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with id {id} not found."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "delete": {
+          "security": [ { "bearerAuth": [] } ],
+          "tags": ["Characters"],
+          "summary": "Delete character by ID",
+          "description": "Get a character by its id number. Admin only",
+          "parameters": [
+            {
+              "in": "path",
+              "style": "form",
+              "name": "id",
+              "description": "character id",
+              "schema": {
+                "type": "number"
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+
+            "200": {
+              "description": "Character deleted successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with id {id} deleted successfully."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "You must login in order to perform the action."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with id {id} not found."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+
+      },
+
+      "/movies": {
+        "post": {
+          "security": [ { "bearerAuth": [] } ],
+          "tags": ["Movies"],
+          "summary": "Create a new movie",
+          "description": "The endpoint will create a new movie. Admin only",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/newMovie"
+                }
+              }
+            }
+          },
+          "responses": {
+
+            "200": {
+              "description": "All movies retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "All characters successfully retrieved"
+                      },
+                      "data": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "title": "Steamboat Willie",
+                            "date": "1928",
+                            "genre": {
+                              "name": "Cartoon short"
+                            },
+                            "characters": [
+                              {
+                                "name": "Mickey Mouse"
+                              },
+                              {
+                                "name": "Pluto"
+                              }
+                            ]
+                          },
+                          {
+                            "title": "Los Tres Mosqueteros",
+                            "date": "2004",
+                            "genre": {
+                              "name": "Animation"
+                            },
+                            "characters": [
+                              {
+                                "name": "Mickey Mouse"
+                              },
+                              {
+                                "name": "Donald Duck"
+                              }
+                            ]
+                          },
+                          {
+                            "title": "Mickeys Twice Upon a Christmas",
+                            "date": "2004",
+                            "genre": {
+                              "name": "Animation"
+                            },
+                            "characters": [
+                              {
+                                "name": "Mickey Mouse"
+                              },
+                              {
+                                "name": "Donald Duck"
+                              },
+                              {
+                                "name": "Goofy"
+                              },
+                              {
+                                "name": "Minnie Mouse"
+                              },
+                              {
+                                "name": "Pluto"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "400": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "No data found, please try again."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "tags": ["Movies"],
+          "summary": "Get all movies.",
+          "description": "Get all movies from daatabase, each movie with its characters and genre.",
+          "responses": {
+
+            "200": {
+              "description": "All movies retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "All movies retrieved successfully"
+                      },
+                      "data": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "title": "Steamboat Willie",
+                            "date": "1928",
+                            "genre": {
+                              "name": "Cartoon short"
+                            },
+                            "characters": [
+                              {
+                                "name": "Mickey Mouse"
+                              },
+                              {
+                                "name": "Pluto"
+                              }
+                            ]
+                          },
+                          {
+                            "title": "Los Tres Mosqueteros",
+                            "date": "2004",
+                            "genre": {
+                              "name": "Animation"
+                            },
+                            "characters": [
+                              {
+                                "name": "Mickey Mouse"
+                              },
+                              {
+                                "name": "Donald Duck"
+                              }
+                            ]
+                          },
+                          {
+                            "title": "Mickeys Twice Upon a Christmas",
+                            "date": "2004",
+                            "genre": {
+                              "name": "Animation"
+                            },
+                            "characters": [
+                              {
+                                "name": "Mickey Mouse"
+                              },
+                              {
+                                "name": "Donald Duck"
+                              },
+                              {
+                                "name": "Goofy"
+                              },
+                              {
+                                "name": "Minnie Mouse"
+                              },
+                              {
+                                "name": "Pluto"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "No data found, please try again."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "/movies?": {
+        "get": {
+          "tags": ["Movies"],
+          "summary": "Get all movies with optional query params for specific values",
+          "description": "Specific values can be retrieved for 'character', 'movie', and 'genre' by sending query params separated by a hyphen with no spaces. Example: 'http://localhost:5001/api/v1/movies?character=name-image-age&movie=title-image-rate&genre=name-id'.",
+          "parameters": [
+            {
+              "in": "query",
+              "style": "form",
+              "name": "character",
+              "description": "Character query params separated by '-'. Possible values are: id, image, name, age, weight, and history",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "movie",
+              "description": "movie query params separated by '-'. Possible values are: id, image, title, description, details, date, rate, and genreId",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "genre",
+              "description": "genre query params separated by '-'. Possible values are: id, name, and image",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            }
+          ],
+
+          "responses": {
+          
+            "200": {
+              "description": "All movies retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "All movies successfully retrieved"
+                      },
+                      "data": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "title": "Steamboat Willie",
+                            "date": "1928",
+                            "genre": {
+                              "name": "Cartoon short"
+                            },
+                            "characters": [
+                              {
+                                "name": "Mickey Mouse"
+                              },
+                              {
+                                "name": "Pluto"
+                              }
+                            ]
+                          },
+                          {
+                            "title": "Los Tres Mosqueteros",
+                            "date": "2004",
+                            "genre": {
+                              "name": "Animation"
+                            },
+                            "characters": [
+                              {
+                                "name": "Mickey Mouse"
+                              },
+                              {
+                                "name": "Donald Duck"
+                              }
+                            ]
+                          },
+                          {
+                            "title": "Mickeys Twice Upon a Christmas",
+                            "date": "2004",
+                            "genre": {
+                              "name": "Animation"
+                            },
+                            "characters": [
+                              {
+                                "name": "Mickey Mouse"
+                              },
+                              {
+                                "name": "Donald Duck"
+                              },
+                              {
+                                "name": "Goofy"
+                              },
+                              {
+                                "name": "Minnie Mouse"
+                              },
+                              {
+                                "name": "Pluto"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Could not retrieve data, please try again."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+
+      "/movies?title": {
+        "get": {
+          "tags": ["Movies"],
+          "summary": "Get movies by title",
+          "description": "Get movies by title. Specific movies can be retrieved by query params 'title'. In addition, query params 'character', 'movie', and 'genre' with values separated by '-' can be sent to obtain specific values",
+          "parameters": [
+            {
+              "in": "query",
+              "style": "form",
+              "name": "title",
+              "description": "Search movies by title",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "character",
+              "description": "Character query params separated by '-'. Possible values are: id, image, name, age, weight, and history",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "movie",
+              "description": "movie query params separated by '-'. Possible values are: id, image, title, description, details, date, rate, and genreId",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "genre",
+              "description": "genre query params separated by '-'. Possible values are: id, name, and image",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            }
+          ],
+          
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Movie with title 'los tres' retrieved successfully."
+                      },
+                      "data": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "title": "Los Tres Mosqueteros",
+                            "date": "2004",
+                            "genre": {
+                              "name": "Animation"
+                            },
+                            "characters": [
+                              {
+                                "name": "Mickey Mouse"
+                              },
+                              {
+                                "name": "Donald Duck"
+                              },
+                              {
+                                "name": "Goofy"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with title '' not found."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "/movies?genreId": {
+        "get": {
+          "tags": ["Movies"],
+          "summary": "Get movies by genreId",
+          "description": "Get movies by genreId. Specific movies can be retrieved by query params 'genreId'. In addition, query params 'character', 'movie', and 'genre' with values separated by '-' can be sent to obtain specific values",
+          "parameters": [
+            {
+              "in": "query",
+              "style": "form",
+              "name": "genreId",
+              "description": "Search movies by genreId",
+              "schema": {
+                "type": "number"
+              },
+              "required": true
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "character",
+              "description": "Character query params separated by '-'. Possible values are: id, image, name, age, weight, and history",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "movie",
+              "description": "movie query params separated by '-'. Possible values are: id, image, title, description, details, date, rate, and genreId",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "genre",
+              "description": "genre query params separated by '-'. Possible values are: id, name, and image",
+              "schema": {
+                "type": "string"
+              },
+              "required": false
+            }
+          ],
+          
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "All movies with genre id {genreId} retrieved successfully."
+                      },
+                      "data": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "title": "Steamboat Willie",
+                            "date": "1928",
+                            "genre": {
+                              "name": "Cartoon short"
+                            },
+                            "characters": [
+                              {
+                                "name": "Mickey Mouse"
+                              },
+                              {
+                                "name": "Pluto"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "No movies found with genre id {genreId}."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "/movies/{id}": {
+        "get": {
+          "tags": ["Movies"],
+          "summary": "Get movie by ID",
+          "description": "Get a movie by its id number",
+          "parameters": [
+            {
+              "in": "path",
+              "style": "form",
+              "name": "id",
+              "description": "character id",
+              "schema": {
+                "type": "number"
+              },
+              "required": "true"
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "character",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "movie",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "style": "form",
+              "name": "genre",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+
+            "200": {
+              "description": "Movie with id '1' retrieved successfully.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character found"
+                      },
+                      "data": {
+                        "type": "object",
+                        "example": {
+                          "title": "Steamboat Willie",
+                          "date": "1928",
+                          "genre": {
+                            "name": "Cartoon short"
+                          },
+                          "characters": [
+                            {
+                              "name": "Mickey Mouse"
+                            },
+                            {
+                              "name": "Pluto"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with id {id} not found."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "put": {
+          "security": [ { "bearerAuth": [] } ],
+          "tags": ["Movies"],
+          "summary": "Update movie by ID",
+          "description": "Update movie by its id number. Admin only",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/newMovie"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "in": "path",
+              "style": "form",
+              "name": "id",
+              "description": "character id",
+              "schema": {
+                "type": "number"
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+
+            "200": {
+              "description": "Character updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character found"
+                      },
+                      "data": {
+                        "type": "object",
+                        "example": {
+                          "id": 0,
+                          "image": "images/characters/character.jpg",
+                          "name": "character name",
+                          "age": 0,
+                          "weight": 0,
+                          "history": "Character history",
+                          "createdAt": "2022-10-20T06:26:29.000Z",
+                          "updatedAt": "2022-10-20T07:56:25.000Z",
+                          "deletedAt": null,
+                          "movies": []
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "You must login in order to perform the action."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with id {id} not found."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "delete": {
+          "security": [ { "bearerAuth": [] } ],
+          "tags": ["Movies"],
+          "summary": "Delete movie by ID",
+          "description": "Delete a movie by its id number. Admin only",
+          "parameters": [
+            {
+              "in": "path",
+              "style": "form",
+              "name": "id",
+              "description": "character id",
+              "schema": {
+                "type": "number"
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+
+            "200": {
+              "description": "Character deleted successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with id {id} deleted successfully."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "You must login in order to perform the action."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with id {id} not found."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+
+      },
+
+      "/genres": {
+        "get": {
+          "tags": ["Genres"],
+          "summary": "Get all genres",
+          "description": "Get all disney genres with its movies and characters.",
+
+          "responses": {
+
+            "200": {
+              "description": "Success.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "All genres found"
+                      },
+                      "data": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "name": "Cartoon short",
+                            "id": 1,
+                            "movies": [
+                              {
+                                "title": "Steamboat Willie",
+                                "characters": [
+                                  {
+                                    "name": "Mickey Mouse"
+                                  },
+                                  {
+                                    "name": "Pluto"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Animation",
+                            "id": 2,
+                            "movies": [
+                              {
+                                "title": "Los Tres Mosqueteros",
+                                "characters": [
+                                  {
+                                    "name": "Mickey Mouse"
+                                  },
+                                  {
+                                    "name": "Donald Duck"
+                                  },
+                                  {
+                                    "name": "Goofy"
+                                  }
+                                ]
+                              },
+                              {
+                                "title": "Mickeys Twice Upon a Christmas",
+                                "characters": [
+                                  {
+                                    "name": "Mickey Mouse"
+                                  },
+                                  {
+                                    "name": "Donald Duck"
+                                  },
+                                  {
+                                    "name": "Goofy"
+                                  },
+                                  {
+                                    "name": "Minnie Mouse"
+                                  },
+                                  {
+                                    "name": "Pluto"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Comedy",
+                            "id": 3,
+                            "movies": []
+                          },
+                          {
+                            "name": "Documental",
+                            "id": 5,
+                            "movies": []
+                          },
+                          {
+                            "name": "Drama",
+                            "id": 4,
+                            "movies": []
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Not found."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "post": {
+          "security": [ { "bearerAuth": [] } ],
+          "tags": ["Genres"],
+          "summary": "Create new genre",
+          "description": "Create new genre. Admin only",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/newGenre"
+                }
+              }
+            }
+          },
+          "responses": {
+
+            "200": {
+              "description": "Genre created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Genre created successfully"
+                      },
+                      "data": {
+                        "type": "object",
+                        "example": {
+                          "id": 6,
+                          "name": "Thriller",
+                          "image": "images/genres/thriller.jpg",
+                          "updatedAt": "2022-10-21T07:28:59.550Z",
+                          "createdAt": "2022-10-21T07:28:59.550Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "You must login in order to perform the action."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "/genres/{id}": {
+        "put": {
+          "security": [ { "bearerAuth": [] } ],
+          "tags": ["Genres"],
+          "summary": "Update genres by ID",
+          "description": "Update genre by its id number. Admin only",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/newGenre"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "in": "path",
+              "style": "form",
+              "name": "id",
+              "description": "genre id",
+              "schema": {
+                "type": "number"
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Genre with id {id} updated successfully."
+                      },
+                      "data": {
+                        "type": "object",
+                        "example": {
+                          "name": "genre name",
+                          "id": 0,
+                          "movies": []
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "You must login in order to perform the action."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with id {id} not found."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "delete": {
+          "security": [ { "bearerAuth": [] } ],
+          "tags": ["Genres"],
+          "summary": "Delete genre by ID",
+          "description": "Delete a genre by its id number. Admin only",
+          "parameters": [
+            {
+              "in": "path",
+              "style": "form",
+              "name": "id",
+              "description": "character id",
+              "schema": {
+                "type": "number"
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+
+            "200": {
+              "description": "Character deleted successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "false"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with id {id} deleted successfully."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "You must login in order to perform the action."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Character with id {id} not found."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            "500": {
+              "description": "Internal Server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "boolean",
+                        "example": "true"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
       }
-
     },
 
 
     "components": {
+
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
+
       "schemas": {
+
         "userRegistration": {
           "type": "object",
           "properties": {
@@ -107,11 +2998,79 @@
             }
           }
         },
-        "registeredUser": {
-            "type": "object",
-            "properties": {
-                
+
+        "newCharacter": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "string",
+              "example": "images/characters/cinderella.jpg"
+            },
+            "name": {
+              "type": "string",
+              "example": "Cinderella"
+            },
+            "age": {
+              "type": "number",
+              "example": 23
+            },
+            "weight": {
+              "type": "number",
+              "example": 120
+            },
+            "history": {
+              "type": "string",
+              "example": "This is the history of cinderella."
             }
+          }
+        },
+
+        "newMovie": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "string",
+              "example":"images/movies/cenicienta.jpg"
+            },
+            "title":{
+              "type": "string",
+              "example": "Cenicienta"
+            },
+            "description": {
+              "type": "string",
+              "example": "Descripción de la Cenicienta."
+            },
+            "details": {
+              "type": "string",
+              "example": "Detalles de la Cenicienta."
+            },
+            "date":{
+              "type": "string",
+              "example": "2004"
+            },
+            "rate": {
+              "type": "number",
+              "example": 4
+            },
+            "genreId": {
+              "type": "number",
+              "example": 2
+            }
+          }
+        },
+
+        "newGenre": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Thriller"
+            },
+            "image": {
+              "type": "string",
+              "example": "images/genres/thriller.jpg"
+            }
+          }
         }
       }
     }

@@ -21,7 +21,7 @@ const getAllCharacters = async (req, res) => {
                 .setHeader('Content-Type', 'application/json')
                 .json({ 
                     error: true,
-                    message: `Character with name ${req.query.name} not found.`
+                    message: `Character with name '${req.query.name}' not found.`
                 })
             };
             return res
@@ -52,7 +52,7 @@ const getAllCharacters = async (req, res) => {
                 .setHeader('Content-Type', 'application/json')
                 .json({ 
                     error: true,
-                    message: `Character with age ${req.query.age} not found.`
+                    message: `Character with age '${req.query.age}' not found.`
                 })
             };
             return res
@@ -81,7 +81,7 @@ const getAllCharacters = async (req, res) => {
             .setHeader('Content-Type', 'application/json')
             .json({
                 error: true,
-                message: 'An error occurred, please try again.'
+                message: 'Could not retrieve data, please try again.'
             });
         }
         return res
@@ -175,7 +175,7 @@ const updateCharacter = async (req, res) => {
             .status(404)
             .json({
                 error: true,
-                message: `Character with id ${req.params.id} could not be updated becaus it may not exist.`
+                message: `Character with id ${req.params.id} could not be updated because it does not exist or wrong value.`
             });
         }
         return res
