@@ -25,3 +25,5 @@ app.listen(port, () => {
 });
 
 connectToDatabase();
+
+module.exports = app;

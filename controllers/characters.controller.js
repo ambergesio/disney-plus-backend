@@ -89,8 +89,8 @@ const getAllCharacters = async (req, res) => {
         .setHeader('Content-Type', 'application/json')
         .json({ 
             error: false,
-            message: 'All characters successfully retrieved',
-            characters: allCharacters
+            message: 'All characters retrieved successfully',
+            data: allCharacters
         });
     }
     catch (error) {
@@ -113,7 +113,7 @@ const getCharacterById = async (req, res) => {
             .setHeader('Content-Type', 'application/json')
             .json({ 
                 error: true,
-                message: `Character with id ${req.params.id} not found.`
+                message: `Character with id '${req.params.id}' not found.`
             })
         };
         return res
@@ -121,7 +121,7 @@ const getCharacterById = async (req, res) => {
         .setHeader('Content-Type', 'application/json')
         .json({ 
             error: false,
-            message: 'Character found',
+            message: `Character with id '${req.params.id}' found`,
             data: character
         });
     }
@@ -149,7 +149,7 @@ const createNewCharacter = async (req, res) => {
             })
         }
         return res
-        .status(200)
+        .status(201)
         .json({
             error: false,
             message: 'New character created',
@@ -175,14 +175,14 @@ const updateCharacter = async (req, res) => {
             .status(404)
             .json({
                 error: true,
-                message: `Character with id ${req.params.id} could not be updated because it does not exist or wrong value.`
+                message: `Character with id '${req.params.id}' could not be updated because it does not exist or wrong value.`
             });
         }
         return res
         .status(200)
         .json({
             error: updateChar.error,
-            message: `Character with id ${req.params.id} updated successfully`,
+            message: `Character with id '${req.params.id}' updated successfully`,
             data: updateChar.data
         });
     }
@@ -205,14 +205,14 @@ const deleteCharacter = async (req, res) => {
             .status(404)
             .json({
                 error: true,
-                message: `Movie with id ${req.params.id} not found or already deleted.`
+                message: `Movie with id '${req.params.id}' not found or already deleted.`
             });
         }
         return res
         .status(200)
         .json({
             error: false,
-            message: `Character with id ${req.params.id} deleted successfully.`
+            message: `Character with id '${req.params.id}' deleted successfully.`
         });
     }
     catch (error) {

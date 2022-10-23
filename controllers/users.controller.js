@@ -87,7 +87,8 @@ const userLogin = async (req, res) => {
         const token = await signToken(userLogged);
         return res.status(200)
         .setHeader('Content-Type', 'application/json')
-        .json({ error: false,
+        .json({
+            error: false,
             message: 'User logged successfully',
             user: userLogged,
             token
